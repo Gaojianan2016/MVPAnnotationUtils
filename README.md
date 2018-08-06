@@ -12,7 +12,7 @@ allprojects {
 
 
 dependencies {
-    implementation 'com.github.Gaojianan2016:MVPAnnotationUtils:1.0.0'
+    implementation 'com.github.Gaojianan2016:MVPAnnotationUtils:1.0.1'
 }
 ```
 
@@ -26,7 +26,7 @@ import com.gjn.mvpannotationlibrary.base.BaseMvpActivity;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
 import com.gjn.mvpannotationlibrary.utils.BindPresenters;
 
-@BindPresenters(presenters = {MainPresenter.class})
+@BindPresenters({MainPresenter.class})
 public class MainActivity extends BaseMvpActivity implements IMainView {
 
     @BindPresenter

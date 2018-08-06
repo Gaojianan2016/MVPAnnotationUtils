@@ -57,7 +57,7 @@ public class MvpBindAnnotations {
         try {
             BindPresenters ps = AnnotationsUtils.getAnnotations(object, BindPresenters.class);
             if (ps != null) {
-                for (Class<?> aClass : ps.presenters()) {
+                for (Class<?> aClass : ps.value()) {
                     String name = aClass.getCanonicalName();
                     BasePresenter bp = (BasePresenter) aClass.newInstance();
                     presentersMap.put(name, bp);
