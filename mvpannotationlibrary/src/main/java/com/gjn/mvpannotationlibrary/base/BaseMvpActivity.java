@@ -12,11 +12,11 @@ public abstract class BaseMvpActivity<P extends BasePresenter> extends BaseActiv
     @Override
     protected void init() {
         super.init();
-        mvpBindAnnotations = MvpBindAnnotations.getInstance(mActivity);
+        mvpBindAnnotations = MvpBindAnnotations.newInstance(mActivity);
     }
 
     protected P getPresenter() {
-        return getPresenter(0);
+        return mvpBindAnnotations.getPresenter();
     }
 
     protected P getPresenter(int i) {
@@ -25,7 +25,7 @@ public abstract class BaseMvpActivity<P extends BasePresenter> extends BaseActiv
 
     @Override
     protected void onDestroy() {
-        mvpBindAnnotations.detachedAll();
+        mvpBindAnnotations.detachedPresenter();
         super.onDestroy();
     }
 

@@ -12,11 +12,11 @@ public abstract class BaseMvpFragment<P extends BasePresenter> extends BaseFragm
     @Override
     protected void init() {
         super.init();
-        mvpBindAnnotations = MvpBindAnnotations.getInstance(mActivity, mFragment);
+        mvpBindAnnotations = MvpBindAnnotations.newInstance(mActivity, mFragment);
     }
 
     protected P getPresenter() {
-        return getPresenter(0);
+        return mvpBindAnnotations.getPresenter();
     }
 
     protected P getPresenter(int i) {
@@ -25,7 +25,7 @@ public abstract class BaseMvpFragment<P extends BasePresenter> extends BaseFragm
 
     @Override
     public void onDestroy() {
-        mvpBindAnnotations.detachedAll();
+        mvpBindAnnotations.detachedPresenter();
         super.onDestroy();
     }
 

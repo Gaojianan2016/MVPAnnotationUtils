@@ -34,9 +34,7 @@ public class BasePresenter<V extends IMvpView, M extends IMvpModel<V>> implement
                 Class<M> clazz = (Class<M>) types[1];
                 try {
                     m = clazz.newInstance();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
