@@ -1,6 +1,7 @@
 package com.gjn.mvpannotationutils;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.gjn.mvpannotationlibrary.base.BaseMvpActivity;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
@@ -19,6 +20,8 @@ public class MainActivity extends BaseMvpActivity implements IMainView {
 
     @Override
     protected void initView() {
+        ((TextView) findViewById(R.id.tv_main)).setText("第一个页面");
+
         findViewById(R.id.tv_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

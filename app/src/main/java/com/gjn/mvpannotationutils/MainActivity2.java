@@ -1,6 +1,7 @@
 package com.gjn.mvpannotationutils;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.gjn.mvpannotationlibrary.base.BaseMvpActivity;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
@@ -15,10 +16,19 @@ public class MainActivity2 extends BaseMvpActivity<MainPresenter> implements IMa
 
     @Override
     protected void initView() {
+        ((TextView) findViewById(R.id.tv_main)).setText("第二个页面");
+
         findViewById(R.id.tv_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getPresenter().success();
+            }
+        });
+
+        findViewById(R.id.btn_main).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNextActivity(MainActivity3.class);
             }
         });
     }

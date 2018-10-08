@@ -70,17 +70,19 @@ public class MvpBindAnnotations {
                     Log.d(TAG, "  " + bp.getClass().getSimpleName());
                 }
             } else {
-                ParameterizedType type = (ParameterizedType) object.getClass().getGenericSuperclass();
-                if (type != null) {
-                    Type[] types = type.getActualTypeArguments();
-                    Log.d(TAG, "save Type: ");
-                    for (Type tClass : types) {
-                        Class aClass = (Class) tClass;
-                        String name = aClass.getCanonicalName();
-                        BasePresenter bp = (BasePresenter) aClass.newInstance();
-                        presentersMap.put(name, bp);
-                        presenters.add(bp);
-                        Log.d(TAG, "  " + bp.getClass().getSimpleName());
+                if (object.getClass().getGenericSuperclass() instanceof BasePresenter) {
+                    ParameterizedType type = (ParameterizedType) object.getClass().getGenericSuperclass();
+                    if (type != null) {
+                        Type[] types = type.getActualTypeArguments();
+                        Log.d(TAG, "save Type: ");
+                        for (Type tClass : types) {
+                            Class aClass = (Class) tClass;
+                            String name = aClass.getCanonicalName();
+                            BasePresenter bp = (BasePresenter) aClass.newInstance();
+                            presentersMap.put(name, bp);
+                            presenters.add(bp);
+                            Log.d(TAG, "  " + bp.getClass().getSimpleName());
+                        }
                     }
                 }
             }
