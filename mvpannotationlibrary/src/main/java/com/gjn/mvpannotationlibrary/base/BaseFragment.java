@@ -47,7 +47,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
             initView();
             initData();
         }
-        ViewUtils.checkParent(mView);
+        ViewUtils.removeParent(mView);
         return mView;
     }
 

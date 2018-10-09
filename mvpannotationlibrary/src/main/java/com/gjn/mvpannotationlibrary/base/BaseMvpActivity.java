@@ -30,12 +30,8 @@ public abstract class BaseMvpActivity<P extends BasePresenter> extends BaseActiv
     }
 
     @Override
-    public void showProgressUI(boolean isShow) {
-
-    }
+    public void showProgressUI(boolean isShow) {}
 
     @Override
-    public void error(Throwable t) {
-
-    }
+    public void error(Throwable t) {}
 }

@@ -2,11 +2,11 @@ package com.gjn.mvpannotationlibrary.base;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.gjn.mvpannotationlibrary.utils.AnnotationsUtils;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
 import com.gjn.mvpannotationlibrary.utils.BindPresenters;
+import com.gjn.mvpannotationlibrary.utils.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -61,7 +61,7 @@ public class MvpBindAnnotations {
         try {
             BindPresenters ps = AnnotationsUtils.getAnnotations(object, BindPresenters.class);
             if (ps != null) {
-                Log.d(TAG, "save Annotations: ");
+                Log.d(TAG, "save Annotations:");
                 for (Class aClass : ps.value()) {
                     String name = aClass.getCanonicalName();
                     BasePresenter bp = (BasePresenter) aClass.newInstance();
@@ -74,7 +74,7 @@ public class MvpBindAnnotations {
                     ParameterizedType type = (ParameterizedType) object.getClass().getGenericSuperclass();
                     if (type != null) {
                         Type[] types = type.getActualTypeArguments();
-                        Log.d(TAG, "save Generic: ");
+                        Log.d(TAG, "save Generic:");
                         for (Type tClass : types) {
                             Class aClass = (Class) tClass;
                             String name = aClass.getCanonicalName();

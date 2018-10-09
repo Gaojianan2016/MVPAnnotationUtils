@@ -17,8 +17,8 @@ public class ToastUtils {
     }
 
     public static ToastUtils getInstance(Context c) {
-        context = c;
         if (toast == null) {
+            context = c;
             toast = Toast.makeText(context.getApplicationContext(), "", Toast.LENGTH_SHORT);
         }
         return toastUtils;

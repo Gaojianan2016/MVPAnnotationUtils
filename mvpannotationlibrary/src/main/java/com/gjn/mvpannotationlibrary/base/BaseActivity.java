@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.gjn.mvpannotationlibrary.utils.AppManager;
+import com.gjn.mvpannotationlibrary.utils.Log;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 
 /**
@@ -23,6 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d("onCreate " + getClass().getSimpleName());
         preCreate();
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
@@ -80,6 +82,12 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     public void finish() {
         AppManager.getInstance().removeActivity(this);
         super.finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("onDestroy " + getClass().getSimpleName());
+        super.onDestroy();
     }
 
     protected abstract int getLayoutId();

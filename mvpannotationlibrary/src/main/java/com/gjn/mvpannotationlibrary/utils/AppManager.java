@@ -27,11 +27,21 @@ public class AppManager {
         return appManager;
     }
 
+    public int getActivityItemCount(){
+        return mStack.size();
+    }
+
+    public Activity getActivityItem(int position){
+        return mStack.get(position);
+    }
+
     public void addActivity(Activity activity){
+        Log.d("push " + activity.getClass().getSimpleName());
         mStack.push(activity);
     }
 
     public void removeActivity(Activity activity){
+        Log.d("remove " + activity.getClass().getSimpleName());
         mStack.remove(activity);
     }
 

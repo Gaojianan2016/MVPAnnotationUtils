@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 public class ViewUtils {
 
-    public static void checkParent(View view){
+    public static void removeParent(View view){
         ViewGroup parent = (ViewGroup) view.getParent();
         if (parent != null) {
             parent.removeView(view);
