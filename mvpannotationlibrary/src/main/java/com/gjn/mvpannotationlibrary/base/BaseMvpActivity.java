@@ -30,7 +30,13 @@ public abstract class BaseMvpActivity<P extends BasePresenter> extends BaseActiv
     }
 
     @Override
-    public void showProgressUI(boolean isShow) {}
+    public void showProgressUI(boolean isShow) {
+        if (isShow) {
+            showDialog(dialogFragment);
+        }else {
+            dismissDialog();
+        }
+    }
 
     @Override
     public void error(Throwable t) {}

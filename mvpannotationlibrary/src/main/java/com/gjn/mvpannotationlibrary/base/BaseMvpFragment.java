@@ -31,7 +31,11 @@ public abstract class BaseMvpFragment<P extends BasePresenter> extends BaseFragm
 
     @Override
     public void showProgressUI(boolean isShow) {
-
+        if (isShow) {
+            showDialog(dialogFragment);
+        }else {
+            dismissDialog();
+        }
     }
 
     @Override

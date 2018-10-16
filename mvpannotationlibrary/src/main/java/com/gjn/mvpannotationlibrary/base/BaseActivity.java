@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.gjn.mvpannotationlibrary.utils.AppManager;
@@ -21,6 +22,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     protected Context mContext;
     protected Activity mActivity;
     protected Bundle mBundle;
+    protected DialogFragment dialogFragment;
+    protected boolean isShowDialog = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,7 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
 
         mContext = this;
         mActivity = this;
-        mBundle = getIntent().getExtras();
+        mBundle = getIntent().getExtras() == null ? new Bundle() : getIntent().getExtras();
 
         AppManager.getInstance().addActivity(this);
 
@@ -79,6 +82,25 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     }
 
     @Override
+    public void showDialog(DialogFragment dialogFragment) {
+        if (!isShowDialog && dialogFragment != null) {
+            Log.i(getClass().getSimpleName(), "显示dialog");
+            isShowDialog = true;
+            this.dialogFragment = dialogFragment;
+            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getTag());
+        }
+    }
+
+    @Override
+    public void dismissDialog() {
+        isShowDialog = false;
+        if (dialogFragment != null) {
+            Log.i(getClass().getSimpleName(), "关闭dialog");
+            dialogFragment.dismiss();
+        }
+    }
+
+    @Override
     public void finish() {
         AppManager.getInstance().removeActivity(this);
         super.finish();
@@ -87,6 +109,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     @Override
     protected void onDestroy() {
         Log.d("onDestroy " + getClass().getSimpleName());
+        dismissDialog();
+        dialogFragment = null;
         super.onDestroy();
     }
 

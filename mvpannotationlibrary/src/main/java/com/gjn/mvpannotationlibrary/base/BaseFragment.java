@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gjn.mvpannotationlibrary.utils.Log;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 import com.gjn.mvpannotationlibrary.utils.ViewUtils;
 
@@ -26,6 +28,8 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     protected Activity mActivity;
     protected Bundle mBundle;
     protected View mView;
+    protected DialogFragment dialogFragment;
+    protected boolean isShowDialog = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +94,32 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     @Override
     public void showToast(String msg) {
         ToastUtils.showToast(mActivity, msg);
+    }
+
+    @Override
+    public void showDialog(DialogFragment dialogFragment) {
+        if (!isShowDialog && dialogFragment != null) {
+            Log.i(getClass().getSimpleName(), "显示dialog");
+            isShowDialog = true;
+            this.dialogFragment = dialogFragment;
+            dialogFragment.show(getChildFragmentManager(), dialogFragment.getTag());
+        }
+    }
+
+    @Override
+    public void dismissDialog() {
+        isShowDialog = false;
+        if (dialogFragment != null) {
+            Log.i(getClass().getSimpleName(), "关闭dialog");
+            dialogFragment.dismiss();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        dismissDialog();
+        dialogFragment = null;
+        super.onDestroyView();
     }
 
     protected abstract int getLayoutId();
