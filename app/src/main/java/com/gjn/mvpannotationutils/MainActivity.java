@@ -1,8 +1,10 @@
 package com.gjn.mvpannotationutils;
 
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
 
+import com.gjn.mvpannotationlibrary.base.BaseDialogFragment;
 import com.gjn.mvpannotationlibrary.base.BaseMvpActivity;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
 import com.gjn.mvpannotationlibrary.utils.BindPresenters;
@@ -12,6 +14,13 @@ public class MainActivity extends BaseMvpActivity implements IMainView {
 
     @BindPresenter
     MainPresenter presenter;
+
+    @Override
+    protected void init() {
+        super.init();
+        dialogFragment = BaseDialogFragment.newInstance(new AlertDialog.Builder(mActivity)
+                .setView(new TextView(mActivity)));
+    }
 
     @Override
     protected int getLayoutId() {
@@ -32,7 +41,7 @@ public class MainActivity extends BaseMvpActivity implements IMainView {
         findViewById(R.id.btn_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNextActivity(MainActivity2.class);
+                toNextActivity(MainActivity2.class);
             }
         });
 

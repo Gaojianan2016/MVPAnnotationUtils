@@ -93,8 +93,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
 
     @Override
     public void dismissDialog() {
-        isShowDialog = false;
-        if (dialogFragment != null) {
+        if (dialogFragment != null && isShowDialog) {
+            isShowDialog = false;
             Log.i(getClass().getSimpleName(), "关闭dialog");
             dialogFragment.dismiss();
         }
