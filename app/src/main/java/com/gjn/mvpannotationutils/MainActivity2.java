@@ -1,11 +1,11 @@
 package com.gjn.mvpannotationutils;
 
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
 
+import com.gjn.mvpannotationlibrary.base.BaseDialogFragment;
 import com.gjn.mvpannotationlibrary.base.BaseMvpActivity;
-import com.gjn.mvpannotationlibrary.utils.BindPresenter;
-import com.gjn.mvpannotationlibrary.utils.BindPresenters;
 
 public class MainActivity2 extends BaseMvpActivity<MainPresenter> implements IMainView {
 

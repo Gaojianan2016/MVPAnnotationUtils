@@ -16,6 +16,9 @@ import com.gjn.mvpannotationlibrary.utils.Log;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 import com.gjn.mvpannotationlibrary.utils.ViewUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author gjn
  * @time 2018/7/27 14:26
@@ -24,12 +27,11 @@ import com.gjn.mvpannotationlibrary.utils.ViewUtils;
 public abstract class BaseFragment extends Fragment implements IEvent {
 
     protected Fragment mFragment;
-    protected Context mContext;
     protected Activity mActivity;
     protected Bundle mBundle;
     protected View mView;
-    protected DialogFragment dialogFragment;
-    protected boolean isShowDialog = false;
+    private List<BaseDialogFragment> mDialogFragments;
+    private BaseDialogFragment.OnDialogCancelListener mOnDialogCancelListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,9 +39,8 @@ public abstract class BaseFragment extends Fragment implements IEvent {
         super.onCreate(savedInstanceState);
 
         mFragment = this;
-        mContext = getContext();
         mActivity = getActivity();
-        mBundle = getArguments();
+        mBundle = getArguments() == null ? new Bundle() : getArguments();
     }
 
     @Nullable
@@ -48,6 +49,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
         if (mView == null) {
             mView = inflater.inflate(getLayoutId(), null);
             init();
+            initDialogFragment();
             initView();
             initData();
         }
@@ -56,10 +58,20 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     }
 
     protected void preCreate() {
-
     }
 
     protected void init() {
+    }
+
+    private void initDialogFragment() {
+        mDialogFragments = new ArrayList<>();
+        mOnDialogCancelListener = new BaseDialogFragment.OnDialogCancelListener() {
+            @Override
+            public void cancel(BaseDialogFragment dialogFragment) {
+                Log.i("手动关闭dialog " + dialogFragment);
+                mDialogFragments.remove(dialogFragment);
+            }
+        };
     }
 
     public final <T extends View> T findViewById(int id) {
@@ -97,28 +109,40 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     }
 
     @Override
-    public void showDialog(DialogFragment dialogFragment) {
-        if (!isShowDialog && dialogFragment != null) {
-            Log.i(getClass().getSimpleName(), "显示dialog");
-            isShowDialog = true;
-            this.dialogFragment = dialogFragment;
+    public void showDialog(BaseDialogFragment dialogFragment) {
+        if (dialogFragment == null) {
+            Log.w("mDialogFragment is null.");
+            return;
+        }
+        dialogFragment.setOnDialogCancelListener(mOnDialogCancelListener);
+        if (!mDialogFragments.contains(dialogFragment)) {
+            mDialogFragments.add(dialogFragment);
+            Log.i("显示dialog " + dialogFragment);
             dialogFragment.show(getChildFragmentManager(), dialogFragment.getTag());
         }
     }
 
     @Override
-    public void dismissDialog() {
-        if (dialogFragment != null && isShowDialog) {
-            isShowDialog = false;
-            Log.i(getClass().getSimpleName(), "关闭dialog");
+    public void dismissDialog(BaseDialogFragment dialogFragment) {
+        if (mDialogFragments.contains(dialogFragment)) {
+            Log.i("关闭dialog " + dialogFragment);
             dialogFragment.dismiss();
+            mDialogFragments.remove(dialogFragment);
         }
     }
 
     @Override
+    public void dismissDialogAll() {
+        for (BaseDialogFragment dialogFragment : mDialogFragments) {
+            Log.i("关闭dialog " + dialogFragment);
+            dialogFragment.dismiss();
+        }
+        mDialogFragments.clear();
+    }
+
+    @Override
     public void onDestroyView() {
-        dismissDialog();
-        dialogFragment = null;
+        mDialogFragments.clear();
         super.onDestroyView();
     }
 

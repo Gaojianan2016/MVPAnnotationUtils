@@ -123,7 +123,7 @@ public class MvpBindAnnotations {
         }
     }
 
-    public int getPresentersItem() {
+    public int getPresentersCount() {
         return presenters.size();
     }
 
@@ -131,15 +131,15 @@ public class MvpBindAnnotations {
         return presenters;
     }
 
-    public <P extends BasePresenter> P getPresenter() {
-        return getPresenter(0);
+    public <P extends BasePresenter> P getPresenterItem() {
+        return getPresenterItem(0);
     }
 
-    public <P extends BasePresenter> P getPresenter(int i) {
-        if (getPresentersItem() == 0) {
+    public <P extends BasePresenter> P getPresenterItem(int i) {
+        if (getPresentersCount() == 0) {
             return null;
-        } else if (i > getPresentersItem() - 1) {
-            i = getPresentersItem() - 1;
+        } else if (i > getPresentersCount() - 1) {
+            i = getPresentersCount() - 1;
         }
         return (P) presenters.get(i);
     }

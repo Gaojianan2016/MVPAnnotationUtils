@@ -19,7 +19,9 @@ public interface IEvent {
 
     void showToast(String msg);
 
-    void showDialog(DialogFragment dialogFragment);
+    void showDialog(BaseDialogFragment dialogFragment);
 
-    void dismissDialog();
+    void dismissDialog(BaseDialogFragment dialogFragment);
+
+    void dismissDialogAll();
 }

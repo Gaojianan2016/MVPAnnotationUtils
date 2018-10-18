@@ -12,6 +12,9 @@ import com.gjn.mvpannotationlibrary.utils.AppManager;
 import com.gjn.mvpannotationlibrary.utils.Log;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author gjn
  * @time 2018/7/25 17:35
@@ -22,8 +25,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     protected Context mContext;
     protected Activity mActivity;
     protected Bundle mBundle;
-    protected DialogFragment dialogFragment;
-    protected boolean isShowDialog = false;
+    private List<BaseDialogFragment> mDialogFragments;
+    private BaseDialogFragment.OnDialogCancelListener mOnDialogCancelListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,10 +38,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
         mContext = this;
         mActivity = this;
         mBundle = getIntent().getExtras() == null ? new Bundle() : getIntent().getExtras();
-
         AppManager.getInstance().addActivity(this);
 
         init();
+        initDialogFragment();
         initView();
         initData();
     }
@@ -49,6 +52,17 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
 
     protected void init() {
 
+    }
+
+    private void initDialogFragment() {
+        mDialogFragments = new ArrayList<>();
+        mOnDialogCancelListener = new BaseDialogFragment.OnDialogCancelListener() {
+            @Override
+            public void cancel(BaseDialogFragment dialogFragment) {
+                Log.i("手动关闭dialog " + dialogFragment);
+                mDialogFragments.remove(dialogFragment);
+            }
+        };
     }
 
     @Override
@@ -82,22 +96,35 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     }
 
     @Override
-    public void showDialog(DialogFragment dialogFragment) {
-        if (!isShowDialog && dialogFragment != null) {
-            Log.i(getClass().getSimpleName(), "显示dialog");
-            isShowDialog = true;
-            this.dialogFragment = dialogFragment;
+    public void showDialog(BaseDialogFragment dialogFragment) {
+        if (dialogFragment == null) {
+            Log.w("mDialogFragment is null.");
+            return;
+        }
+        dialogFragment.setOnDialogCancelListener(mOnDialogCancelListener);
+        if (!mDialogFragments.contains(dialogFragment)) {
+            mDialogFragments.add(dialogFragment);
+            Log.i("显示dialog " + dialogFragment);
             dialogFragment.show(getSupportFragmentManager(), dialogFragment.getTag());
         }
     }
 
     @Override
-    public void dismissDialog() {
-        if (dialogFragment != null && isShowDialog) {
-            isShowDialog = false;
-            Log.i(getClass().getSimpleName(), "关闭dialog");
+    public void dismissDialog(BaseDialogFragment dialogFragment) {
+        if (mDialogFragments.contains(dialogFragment)) {
+            Log.i("关闭dialog " + dialogFragment);
+            dialogFragment.dismiss();
+            mDialogFragments.remove(dialogFragment);
+        }
+    }
+
+    @Override
+    public void dismissDialogAll() {
+        for (BaseDialogFragment dialogFragment : mDialogFragments) {
+            Log.i("关闭dialog " + dialogFragment);
             dialogFragment.dismiss();
         }
+        mDialogFragments.clear();
     }
 
     @Override
@@ -109,8 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     @Override
     protected void onDestroy() {
         Log.d("onDestroy " + getClass().getSimpleName());
-        dismissDialog();
-        dialogFragment = null;
+        mDialogFragments.clear();
         super.onDestroy();
     }
 
