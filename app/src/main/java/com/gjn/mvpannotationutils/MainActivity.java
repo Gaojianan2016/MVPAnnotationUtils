@@ -1,6 +1,7 @@
 package com.gjn.mvpannotationutils;
 
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
     protected void init() {
         super.init();
         mDialogFragment = BaseDialogFragment
-                .newInstance(new AlertDialog.Builder(mActivity).setView(R.layout.dialog_test));
+                .newInstance(new AlertDialog.Builder(mActivity).setView(R.layout.dialog_test), 0);
     }
 
     @Override
@@ -40,11 +41,12 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
                 .newInstance(new AlertDialog.Builder(mActivity)
                         .setView(R.layout.dialog_test), 0);
 
-        TextView textView = new TextView(mActivity);
-        textView.setText("我是dialog");
+        View view = LayoutInflater.from(mActivity).inflate(R.layout.dialog_test, null);
+        TextView textView = view.findViewById(R.id.tv_dialog);
+        textView.setText("我是第二个");
         dialogFragment2 = BaseDialogFragment
                 .newInstance(new AlertDialog.Builder(mActivity)
-                        .setView(textView));
+                        .setView(view));
     }
 
     @Override
@@ -56,10 +58,7 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
                 show(0);
                 show2(1);
                 show3(2);
-                show(3);
-                show2(4);
-                show3(5);
-                dismiss(6);
+//                dismiss(3);
             }
         });
 

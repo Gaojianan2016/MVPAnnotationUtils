@@ -113,7 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     public void dismissDialog(BaseDialogFragment dialogFragment) {
         if (mDialogFragments.contains(dialogFragment)) {
             Log.i("关闭dialog " + dialogFragment);
-            dialogFragment.dismiss();
+            dialogFragment.dismissAllowingStateLoss();
             mDialogFragments.remove(dialogFragment);
         }
     }
@@ -122,7 +122,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     public void dismissDialogAll() {
         for (BaseDialogFragment dialogFragment : mDialogFragments) {
             Log.i("关闭dialog " + dialogFragment);
-            dialogFragment.dismiss();
+            dialogFragment.dismissAllowingStateLoss();
         }
         mDialogFragments.clear();
     }

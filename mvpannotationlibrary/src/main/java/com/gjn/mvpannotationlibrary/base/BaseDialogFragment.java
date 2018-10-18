@@ -6,10 +6,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -35,12 +39,8 @@ public class BaseDialogFragment extends DialogFragment {
     private int gravity = Gravity.CENTER;
     private OnDialogCancelListener onDialogCancelListener;
 
-    public void setOnDialogCancelListener(OnDialogCancelListener onDialogCancelListener) {
-        this.onDialogCancelListener = onDialogCancelListener;
-    }
-
     public static BaseDialogFragment newInstance(AlertDialog.Builder builder) {
-        return newInstance(builder, 0.0f);
+        return newInstance(builder, DIMAMOUT);
     }
 
     public static BaseDialogFragment newInstance(AlertDialog.Builder builder, boolean isTransparent) {
@@ -48,7 +48,7 @@ public class BaseDialogFragment extends DialogFragment {
     }
 
     public static BaseDialogFragment newInstance(AlertDialog.Builder builder, float dimAmout) {
-        return newInstance(builder, true, dimAmout);
+        return newInstance(builder, false, dimAmout);
     }
 
     public static BaseDialogFragment newInstance(AlertDialog.Builder builder, boolean isTransparent,
@@ -66,6 +66,10 @@ public class BaseDialogFragment extends DialogFragment {
         instance.width = width;
         instance.height = height;
         return instance;
+    }
+
+    public void setOnDialogCancelListener(OnDialogCancelListener onDialogCancelListener) {
+        this.onDialogCancelListener = onDialogCancelListener;
     }
 
     public void setShowAnimations(boolean showAnimations) {
@@ -123,7 +127,7 @@ public class BaseDialogFragment extends DialogFragment {
         }
     }
 
-    public interface OnDialogCancelListener{
+    public interface OnDialogCancelListener {
         void cancel(BaseDialogFragment dialogFragment);
     }
 }
