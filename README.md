@@ -20,6 +20,7 @@ Activity1使用
 ```
 package com.gjn.mvpannotationutils;
 
+import android.app.Activity;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
@@ -38,14 +39,6 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
     MainPresenter2 presenter2;
 
     BaseDialogFragment dialogFragment1;
-    BaseDialogFragment dialogFragment2;
-
-    @Override
-    protected void init() {
-        super.init();
-        mDialogFragment = BaseDialogFragment
-                .newInstance(new AlertDialog.Builder(mActivity).setView(R.layout.dialog_test));
-    }
 
     @Override
     protected int getLayoutId() {
@@ -56,15 +49,17 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
     protected void initView() {
         ((TextView) findViewById(R.id.tv_main)).setText("第一个页面");
 
-        dialogFragment1 = BaseDialogFragment
-                .newInstance(new AlertDialog.Builder(mActivity)
-                        .setView(R.layout.dialog_test), 0);
+        dialogFragment1 = BaseDialogFragment.newInstance(new AlertDialog.Builder(mActivity)
+                .setView(R.layout.dialog_test), 0);
+    }
 
-        TextView textView = new TextView(mActivity);
-        textView.setText("我是dialog");
-        dialogFragment2 = BaseDialogFragment
-                .newInstance(new AlertDialog.Builder(mActivity)
-                        .setView(textView));
+    private AlertDialog.Builder createBuilder(Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_test, null);
+        TextView textView = view.findViewById(R.id.tv_dialog);
+        textView.setText("我是第二个");
+        builder.setView(view);
+        return builder;
     }
 
     @Override
@@ -75,11 +70,9 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
                 presenter.success();
                 show(0);
                 show2(1);
-                show3(2);
-                show(3);
-                show2(4);
-                show3(5);
-                dismiss(6);
+                show(2);
+                show2(3);
+                dismiss(4);
             }
         });
 
@@ -98,25 +91,16 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
             public void run() {
                 showDialog(dialogFragment1);
             }
-        }, i*1000);
+        }, i * 1000);
     }
 
     private void show2(int i) {
         findViewById(R.id.btn_main).postDelayed(new Runnable() {
             @Override
             public void run() {
-                showDialog(dialogFragment2);
+                showLoadingDialog(BaseDialogFragment.newInstance(createBuilder(mActivity)));
             }
-        }, i*1000);
-    }
-
-    private void show3(int i) {
-        findViewById(R.id.btn_main).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showProgressUI(true);
-            }
-        }, i*1000);
+        }, i * 1000);
     }
 
     private void dismiss(int i) {
@@ -125,7 +109,7 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
             public void run() {
                 dismissDialogAll();
             }
-        }, i*1000);
+        }, i * 1000);
     }
 
 
