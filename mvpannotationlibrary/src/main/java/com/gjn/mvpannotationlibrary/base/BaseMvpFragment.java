@@ -8,7 +8,6 @@ package com.gjn.mvpannotationlibrary.base;
 public abstract class BaseMvpFragment<P extends BasePresenter> extends BaseFragment implements IMvpView {
 
     protected MvpBindAnnotations mvpBindAnnotations;
-    protected BaseDialogFragment mDialogFragment;
 
     @Override
     protected void init() {
@@ -27,17 +26,11 @@ public abstract class BaseMvpFragment<P extends BasePresenter> extends BaseFragm
     @Override
     public void onDestroy() {
         mvpBindAnnotations.detachedPresenter();
-        mDialogFragment = null;
         super.onDestroy();
     }
 
     @Override
     public void showProgressUI(boolean isShow) {
-        if (isShow) {
-            showDialog(mDialogFragment);
-        }else {
-            dismissDialog(mDialogFragment);
-        }
     }
 
     @Override

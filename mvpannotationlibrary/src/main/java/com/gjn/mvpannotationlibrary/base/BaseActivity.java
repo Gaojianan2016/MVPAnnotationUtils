@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.gjn.mvpannotationlibrary.utils.AppManager;
@@ -27,6 +26,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     protected Bundle mBundle;
     private List<BaseDialogFragment> mDialogFragments;
     private BaseDialogFragment.OnDialogCancelListener mOnDialogCancelListener;
+
+    private BaseDialogFragment mLoadingDialog;
+    protected boolean mIsShowLoadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +97,22 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
         ToastUtils.showToast(mContext, msg);
     }
 
+    protected void showLoadingDialog(BaseDialogFragment loadingDialog) {
+        if (!mIsShowLoadingDialog) {
+            mIsShowLoadingDialog = true;
+            mLoadingDialog = loadingDialog;
+            showDialog(mLoadingDialog);
+        }
+    }
+
+    protected void dismiss(BaseDialogFragment dialogFragment) {
+        if (dialogFragment == mLoadingDialog) {
+            mIsShowLoadingDialog = false;
+        }
+        Log.i("关闭dialog " + dialogFragment);
+        dialogFragment.dismissAllowingStateLoss();
+    }
+
     @Override
     public void showDialog(BaseDialogFragment dialogFragment) {
         if (dialogFragment == null) {
@@ -112,8 +130,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     @Override
     public void dismissDialog(BaseDialogFragment dialogFragment) {
         if (mDialogFragments.contains(dialogFragment)) {
-            Log.i("关闭dialog " + dialogFragment);
-            dialogFragment.dismissAllowingStateLoss();
+            dismiss(dialogFragment);
             mDialogFragments.remove(dialogFragment);
         }
     }
@@ -121,8 +138,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     @Override
     public void dismissDialogAll() {
         for (BaseDialogFragment dialogFragment : mDialogFragments) {
-            Log.i("关闭dialog " + dialogFragment);
-            dialogFragment.dismissAllowingStateLoss();
+            dismiss(dialogFragment);
         }
         mDialogFragments.clear();
     }

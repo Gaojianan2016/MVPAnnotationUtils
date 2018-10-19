@@ -1,12 +1,10 @@
 package com.gjn.mvpannotationlibrary.base;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +28,10 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     protected Activity mActivity;
     protected Bundle mBundle;
     protected View mView;
+    protected boolean mIsShowLoadingDialog;
     private List<BaseDialogFragment> mDialogFragments;
     private BaseDialogFragment.OnDialogCancelListener mOnDialogCancelListener;
+    private BaseDialogFragment mLoadingDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,6 +108,22 @@ public abstract class BaseFragment extends Fragment implements IEvent {
         ToastUtils.showToast(mActivity, msg);
     }
 
+    protected void showLoadingDialog(BaseDialogFragment loadingDialog) {
+        if (!mIsShowLoadingDialog) {
+            mIsShowLoadingDialog = true;
+            mLoadingDialog = loadingDialog;
+            showDialog(mLoadingDialog);
+        }
+    }
+
+    protected void dismiss(BaseDialogFragment dialogFragment) {
+        if (dialogFragment == mLoadingDialog) {
+            mIsShowLoadingDialog = false;
+        }
+        Log.i("关闭dialog " + dialogFragment);
+        dialogFragment.dismissAllowingStateLoss();
+    }
+
     @Override
     public void showDialog(BaseDialogFragment dialogFragment) {
         if (dialogFragment == null) {
@@ -125,8 +141,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     @Override
     public void dismissDialog(BaseDialogFragment dialogFragment) {
         if (mDialogFragments.contains(dialogFragment)) {
-            Log.i("关闭dialog " + dialogFragment);
-            dialogFragment.dismiss();
+            dismiss(dialogFragment);
             mDialogFragments.remove(dialogFragment);
         }
     }
@@ -134,8 +149,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     @Override
     public void dismissDialogAll() {
         for (BaseDialogFragment dialogFragment : mDialogFragments) {
-            Log.i("关闭dialog " + dialogFragment);
-            dialogFragment.dismiss();
+            dismiss(dialogFragment);
         }
         mDialogFragments.clear();
     }
