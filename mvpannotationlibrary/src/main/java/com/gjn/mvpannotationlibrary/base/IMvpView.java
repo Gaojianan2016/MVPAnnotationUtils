@@ -8,5 +8,7 @@ package com.gjn.mvpannotationlibrary.base;
 public interface IMvpView {
     void showProgressUI(boolean isShow);
 
+    void fail(String msg);
+
     void error(Throwable t);
 }

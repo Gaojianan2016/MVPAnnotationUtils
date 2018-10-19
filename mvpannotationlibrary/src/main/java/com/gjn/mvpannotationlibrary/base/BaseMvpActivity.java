@@ -34,5 +34,10 @@ public abstract class BaseMvpActivity<P extends BasePresenter> extends BaseActiv
     }
 
     @Override
-    public void error(Throwable t) {}
+    public void error(Throwable t) {
+    }
+
+    @Override
+    public void fail(String msg) {
+    }
 }
