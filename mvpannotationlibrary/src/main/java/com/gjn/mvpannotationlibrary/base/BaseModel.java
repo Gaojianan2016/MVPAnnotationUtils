@@ -33,4 +33,18 @@ public class BaseModel<V extends IMvpView> implements IMvpModel<V> {
     public Activity getActivity() {
         return activity;
     }
+
+    @Override
+    public void showUI() {
+        if (v != null) {
+            v.showProgressUI(true);
+        }
+    }
+
+    @Override
+    public void dismissUI() {
+        if (v != null) {
+            v.showProgressUI(false);
+        }
+    }
 }

@@ -39,5 +39,6 @@ public abstract class BaseMvpFragment<P extends BasePresenter> extends BaseFragm
 
     @Override
     public void fail(String msg) {
+        showToast(msg);
     }
 }

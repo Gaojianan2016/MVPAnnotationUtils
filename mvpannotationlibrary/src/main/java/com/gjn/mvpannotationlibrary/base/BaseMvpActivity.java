@@ -39,5 +39,6 @@ public abstract class BaseMvpActivity<P extends BasePresenter> extends BaseActiv
 
     @Override
     public void fail(String msg) {
+        showToast(msg);
     }
 }

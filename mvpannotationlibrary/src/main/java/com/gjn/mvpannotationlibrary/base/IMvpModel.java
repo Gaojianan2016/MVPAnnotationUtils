@@ -12,4 +12,6 @@ public interface IMvpModel<V extends IMvpView> {
     void unBind();
     V getMvpView();
     Activity getActivity();
+    void showUI();
+    void dismissUI();
 }
