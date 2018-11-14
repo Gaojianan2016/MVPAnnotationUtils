@@ -1,5 +1,7 @@
 package com.gjn.mvpannotationlibrary.utils;
 
+import com.gjn.mvpannotationlibrary.BuildConfig;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -50,7 +52,7 @@ public class AnnotationsUtils {
         return null;
     }
 
-    public static <T extends Annotation> List<Field> getField(Object obj, Class<T> annotationCls){
+    public static List<Field> getField(Object obj, Class<? extends Annotation> annotationCls){
         Class<?> clazz = obj.getClass();
         Field[] fields = clazz.getDeclaredFields();
         List<Field> result = new ArrayList<>();
@@ -62,7 +64,7 @@ public class AnnotationsUtils {
         return result;
     }
 
-    public static <T extends Annotation> void setFieldAnnotations(Object obj, Class<T> annotationCls,
+    public static void setFieldAnnotations(Object obj, Class<? extends Annotation> annotationCls,
                                                                   setAnnotations setAnnotations) throws IllegalAccessException {
         setAnnotations.set(obj, getField(obj, annotationCls), getFieldAnnotations(obj, annotationCls));
     }

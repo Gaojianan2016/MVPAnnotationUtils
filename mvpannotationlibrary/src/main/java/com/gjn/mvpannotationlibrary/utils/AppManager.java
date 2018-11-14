@@ -36,12 +36,12 @@ public class AppManager {
     }
 
     public void addActivity(Activity activity){
-        Log.d("push " + activity.getClass().getSimpleName());
+        MvpLog.d("push " + activity.getClass().getSimpleName());
         mStack.push(activity);
     }
 
     public void removeActivity(Activity activity){
-        Log.d("remove " + activity.getClass().getSimpleName());
+        MvpLog.d("remove " + activity.getClass().getSimpleName());
         mStack.remove(activity);
     }
 

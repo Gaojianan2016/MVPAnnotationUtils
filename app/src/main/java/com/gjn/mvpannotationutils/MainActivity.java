@@ -49,10 +49,10 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
             public void onClick(View v) {
                 presenter.success();
                 show(0);
-                show2(1);
-                show(2);
                 show2(3);
-                dismiss(4);
+                show(7);
+                show2(10);
+                dismiss(15);
             }
         });
 

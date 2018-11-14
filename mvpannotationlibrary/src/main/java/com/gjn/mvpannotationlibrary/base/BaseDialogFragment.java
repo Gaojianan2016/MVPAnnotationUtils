@@ -123,6 +123,12 @@ public class BaseDialogFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+    }
+
     public interface OnDialogCancelListener {
         void cancel(BaseDialogFragment dialogFragment);
     }

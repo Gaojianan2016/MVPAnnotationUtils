@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gjn.mvpannotationlibrary.utils.Log;
+import com.gjn.mvpannotationlibrary.utils.MvpLog;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 import com.gjn.mvpannotationlibrary.utils.ViewUtils;
 
@@ -68,7 +68,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
         mOnDialogCancelListener = new BaseDialogFragment.OnDialogCancelListener() {
             @Override
             public void cancel(BaseDialogFragment dialogFragment) {
-                Log.i("手动关闭dialog " + dialogFragment);
+                MvpLog.i("手动关闭dialog " + dialogFragment);
                 mDialogFragments.remove(dialogFragment);
             }
         };
@@ -120,20 +120,20 @@ public abstract class BaseFragment extends Fragment implements IEvent {
         if (dialogFragment == mLoadingDialog) {
             mIsShowLoadingDialog = false;
         }
-        Log.i("关闭dialog " + dialogFragment);
+        MvpLog.i("关闭dialog " + dialogFragment);
         dialogFragment.dismissAllowingStateLoss();
     }
 
     @Override
     public void showDialog(BaseDialogFragment dialogFragment) {
         if (dialogFragment == null) {
-            Log.w("mDialogFragment is null.");
+            MvpLog.w("mDialogFragment is null.");
             return;
         }
         dialogFragment.setOnDialogCancelListener(mOnDialogCancelListener);
         if (!mDialogFragments.contains(dialogFragment)) {
             mDialogFragments.add(dialogFragment);
-            Log.i("显示dialog " + dialogFragment);
+            MvpLog.i("显示dialog " + dialogFragment);
             dialogFragment.show(getChildFragmentManager(), dialogFragment.getTag());
         }
     }

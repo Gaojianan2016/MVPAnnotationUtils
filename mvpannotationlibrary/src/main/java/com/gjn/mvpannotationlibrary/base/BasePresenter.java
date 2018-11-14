@@ -2,6 +2,8 @@ package com.gjn.mvpannotationlibrary.base;
 
 import android.app.Activity;
 
+import com.gjn.mvpannotationlibrary.utils.ReflexUtils;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -31,12 +33,7 @@ public class BasePresenter<V extends IMvpView, M extends IMvpModel<V>> implement
         if (type != null) {
             Type[] types = type.getActualTypeArguments();
             if (m == null) {
-                Class<M> clazz = (Class<M>) types[1];
-                try {
-                    m = clazz.newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                m = ReflexUtils.createObj((Class<M>) types[1]);
             }
         }
     }

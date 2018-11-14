@@ -6,7 +6,8 @@ import android.support.v4.app.Fragment;
 import com.gjn.mvpannotationlibrary.utils.AnnotationsUtils;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
 import com.gjn.mvpannotationlibrary.utils.BindPresenters;
-import com.gjn.mvpannotationlibrary.utils.Log;
+import com.gjn.mvpannotationlibrary.utils.MvpLog;
+import com.gjn.mvpannotationlibrary.utils.ReflexUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -38,9 +39,9 @@ public class MvpBindAnnotations {
         if (fragment != null) {
             this.fragment = fragment;
             object = this.fragment;
-            Log.d(TAG, "bind fragment");
+            MvpLog.d(TAG, "bind fragment");
         } else {
-            Log.d(TAG, "bind activity");
+            MvpLog.d(TAG, "bind activity");
         }
         presentersMap = new HashMap<>();
         presenters = new ArrayList<>();
@@ -58,36 +59,33 @@ public class MvpBindAnnotations {
     }
 
     private void savePresenters() {
-        try {
-            BindPresenters ps = AnnotationsUtils.getAnnotations(object, BindPresenters.class);
-            if (ps != null) {
-                Log.d(TAG, "save Annotations:");
-                for (Class aClass : ps.value()) {
-                    String name = aClass.getCanonicalName();
-                    BasePresenter bp = (BasePresenter) aClass.newInstance();
-                    presentersMap.put(name, bp);
-                    presenters.add(bp);
-                    Log.d(TAG, "┗━━" + bp.getClass().getSimpleName());
-                }
-            } else {
-                if (object.getClass().getGenericSuperclass() instanceof ParameterizedType) {
-                    ParameterizedType type = (ParameterizedType) object.getClass().getGenericSuperclass();
-                    if (type != null) {
-                        Type[] types = type.getActualTypeArguments();
-                        Log.d(TAG, "save Generic:");
-                        for (Type tClass : types) {
-                            Class aClass = (Class) tClass;
-                            String name = aClass.getCanonicalName();
-                            BasePresenter bp = (BasePresenter) aClass.newInstance();
-                            presentersMap.put(name, bp);
-                            presenters.add(bp);
-                            Log.d(TAG, "┗━━" + bp.getClass().getSimpleName());
-                        }
+        BindPresenters ps = AnnotationsUtils.getAnnotations(object, BindPresenters.class);
+        if (ps != null) {
+            MvpLog.d(TAG, "save Annotations:");
+            for (Class aClass : ps.value()) {
+                String name = aClass.getCanonicalName();
+                BasePresenter bp = (BasePresenter) ReflexUtils.createObj(aClass);
+                presentersMap.put(name, bp);
+                presenters.add(bp);
+                MvpLog.d(TAG, "┗━━" + bp.getClass().getSimpleName());
+            }
+        } else {
+            Type type = object.getClass().getGenericSuperclass();
+            if (type instanceof ParameterizedType) {
+                ParameterizedType aType = (ParameterizedType) type;
+                if (aType != null) {
+                    Type[] types = aType.getActualTypeArguments();
+                    MvpLog.d(TAG, "save Generic:");
+                    for (Type tClass : types) {
+                        Class aClass = (Class) tClass;
+                        String name = aClass.getCanonicalName();
+                        BasePresenter bp = (BasePresenter) ReflexUtils.createObj(aClass);
+                        presentersMap.put(name, bp);
+                        presenters.add(bp);
+                        MvpLog.d(TAG, "┗━━" + bp.getClass().getSimpleName());
                     }
                 }
             }
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
         }
     }
 
