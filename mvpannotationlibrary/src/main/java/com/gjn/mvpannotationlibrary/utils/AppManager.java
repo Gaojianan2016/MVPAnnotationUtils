@@ -2,7 +2,7 @@ package com.gjn.mvpannotationlibrary.utils;
 
 import android.app.Activity;
 
-import java.util.Stack;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author gjn
@@ -10,7 +10,8 @@ import java.util.Stack;
  */
 
 public class AppManager {
-    private static Stack<Activity> mStack = new Stack<>();
+    private static CopyOnWriteArrayList<Activity> mActivities = new CopyOnWriteArrayList<>();
+
     private static AppManager appManager;
 
     private AppManager() {
@@ -18,7 +19,7 @@ public class AppManager {
 
     public static AppManager getInstance() {
         if (appManager == null) {
-            synchronized (AppManager.class){
+            synchronized (AppManager.class) {
                 if (appManager == null) {
                     appManager = new AppManager();
                 }
@@ -27,25 +28,31 @@ public class AppManager {
         return appManager;
     }
 
-    public int getActivityItemCount(){
-        return mStack.size();
+    public static CopyOnWriteArrayList<Activity> getActivities() {
+        return mActivities;
     }
 
-    public Activity getActivityItem(int position){
-        return mStack.get(position);
+    public int getActivityItemCount() {
+        return mActivities.size();
     }
 
-    public void addActivity(Activity activity){
+    public Activity getActivityItem(int position) {
+        return mActivities.get(position);
+    }
+
+    public void addActivity(Activity activity) {
         MvpLog.d("push " + activity.getClass().getSimpleName());
-        mStack.push(activity);
+        mActivities.add(activity);
     }
 
-    public void removeActivity(Activity activity){
-        MvpLog.d("remove " + activity.getClass().getSimpleName());
-        mStack.remove(activity);
+    public void removeActivity(Activity activity) {
+        if (mActivities.contains(activity)) {
+            MvpLog.d("remove " + activity.getClass().getSimpleName());
+            mActivities.remove(activity);
+        }
     }
 
-    public void finishActivity(Activity activity){
+    public void finishActivity(Activity activity) {
         if (activity != null) {
             removeActivity(activity);
             if (!activity.isFinishing()) {
@@ -54,16 +61,16 @@ public class AppManager {
         }
     }
 
-    public void finishActivity(Class cls){
-        for (Activity activity : mStack) {
+    public void finishActivity(Class cls) {
+        for (Activity activity : mActivities) {
             if (activity.getClass().equals(cls)) {
                 finishActivity(activity);
             }
         }
     }
 
-    public void finishAllActivity(){
-        for (Activity activity : mStack) {
+    public void finishAllActivity() {
+        for (Activity activity : mActivities) {
             finishActivity(activity);
         }
     }

@@ -7,8 +7,10 @@ import android.widget.TextView;
 
 import com.gjn.mvpannotationlibrary.base.BaseDialogFragment;
 import com.gjn.mvpannotationlibrary.base.BaseMvpActivity;
+import com.gjn.mvpannotationlibrary.utils.AppManager;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
 import com.gjn.mvpannotationlibrary.utils.BindPresenters;
+import com.gjn.mvpannotationlibrary.utils.MvpLog;
 
 @BindPresenters({MainPresenter.class, MainPresenter2.class})
 public class MainActivity extends BaseMvpActivity implements IMainView, IMainView2 {
@@ -44,6 +46,11 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
 
     @Override
     protected void initData() {
+
+        for (Activity activity : AppManager.getActivities()) {
+            MvpLog.e( "name = " + activity.getClass().getSimpleName());
+        }
+
         findViewById(R.id.tv_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
