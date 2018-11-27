@@ -2,11 +2,14 @@ package com.gjn.mvpannotationutils;
 
 import android.app.Activity;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.gjn.mvpannotationlibrary.base.BaseDialogFragment;
 import com.gjn.mvpannotationlibrary.base.BaseMvpActivity;
+import com.gjn.mvpannotationlibrary.base.MvpDialogFragment;
+import com.gjn.mvpannotationlibrary.base.ViewHolder;
 import com.gjn.mvpannotationlibrary.utils.AppManager;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
 import com.gjn.mvpannotationlibrary.utils.BindPresenters;
@@ -21,6 +24,7 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
     MainPresenter2 presenter2;
 
     BaseDialogFragment dialogFragment1;
+    BaseDialogFragment dialogFragment2;
 
     @Override
     protected int getLayoutId() {
@@ -31,15 +35,35 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
     protected void initView() {
         ((TextView) findViewById(R.id.tv_main)).setText("第一个页面");
 
-        dialogFragment1 = BaseDialogFragment.newInstance(new AlertDialog.Builder(mActivity)
-                .setView(R.layout.dialog_test), 0);
+        dialogFragment1 = MvpDialogFragment.newInstance(createBuilder(mActivity));
+        dialogFragment2 = MvpDialogFragment.newInstance(R.layout.dialog_test, new MvpDialogFragment.DialogCreateListener() {
+            @Override
+            public void convertView(ViewHolder holder, BaseDialogFragment dialogFragment) {
+                TextView textView = holder.findView(R.id.tv_dialog);
+                textView.setText("我是第二个dialog");
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showToast("woshidierge");
+                    }
+                });
+            }
+        });
+        dialogFragment2.setDimAmout(0).setWidth(BaseDialogFragment.MATCH_PARENT);
     }
 
     private AlertDialog.Builder createBuilder(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_test, null);
+        builder.setView(R.layout.dialog_test);
+        return builder;
+    }
+
+    private AlertDialog.Builder createBuilder2(Activity activity) {
+        //自定义view请不要使用AlertDialog.Builder生成
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_test, null);
         TextView textView = view.findViewById(R.id.tv_dialog);
-        textView.setText("我是第二个");
+        textView.setText("我是第二个dialog啊");
         builder.setView(view);
         return builder;
     }
@@ -48,7 +72,7 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
     protected void initData() {
 
         for (Activity activity : AppManager.getActivities()) {
-            MvpLog.e( "name = " + activity.getClass().getSimpleName());
+            MvpLog.e("name = " + activity.getClass().getSimpleName());
         }
 
         findViewById(R.id.tv_main).setOnClickListener(new View.OnClickListener() {
@@ -56,10 +80,10 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
             public void onClick(View v) {
                 presenter.success();
                 show(0);
-                show2(3);
-                show(7);
-                show2(10);
-                dismiss(15);
+                show2(2);
+                show(4);
+                show2(6);
+                dismissAll(8);
             }
         });
 
@@ -85,12 +109,12 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
         findViewById(R.id.btn_main).postDelayed(new Runnable() {
             @Override
             public void run() {
-                showLoadingDialog(BaseDialogFragment.newInstance(createBuilder(mActivity)));
+                showDialog(dialogFragment2);
             }
         }, i * 1000);
     }
 
-    private void dismiss(int i) {
+    private void dismissAll(int i) {
         findViewById(R.id.btn_main).postDelayed(new Runnable() {
             @Override
             public void run() {

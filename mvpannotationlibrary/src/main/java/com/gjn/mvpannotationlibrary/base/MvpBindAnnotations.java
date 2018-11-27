@@ -95,12 +95,7 @@ public class MvpBindAnnotations {
             String name = field.getType().getName();
             BasePresenter bp = presentersMap.get(name);
             if (bp != null) {
-                try {
-                    field.setAccessible(true);
-                    field.set(object, bp);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                ReflexUtils.setField(object, field, bp);
             }
         }
     }

@@ -11,8 +11,7 @@ import com.gjn.mvpannotationlibrary.utils.AppManager;
 import com.gjn.mvpannotationlibrary.utils.MvpLog;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author gjn
@@ -24,11 +23,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     protected Context mContext;
     protected Activity mActivity;
     protected Bundle mBundle;
-    private List<BaseDialogFragment> mDialogFragments;
+    private CopyOnWriteArrayList<BaseDialogFragment> mDialogFragments;
     private BaseDialogFragment.OnDialogCancelListener mOnDialogCancelListener;
-
-    private BaseDialogFragment mLoadingDialog;
-    protected boolean mIsShowLoadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     }
 
     private void initDialogFragment() {
-        mDialogFragments = new ArrayList<>();
+        mDialogFragments = new CopyOnWriteArrayList<>();
         mOnDialogCancelListener = new BaseDialogFragment.OnDialogCancelListener() {
             @Override
             public void cancel(BaseDialogFragment dialogFragment) {
@@ -97,22 +93,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
         ToastUtils.showToast(mContext, msg);
     }
 
-    protected void showLoadingDialog(BaseDialogFragment loadingDialog) {
-        if (!mIsShowLoadingDialog) {
-            mIsShowLoadingDialog = true;
-            mLoadingDialog = loadingDialog;
-            showDialog(mLoadingDialog);
-        }
-    }
-
-    protected void dismiss(BaseDialogFragment dialogFragment) {
-        if (dialogFragment == mLoadingDialog) {
-            mIsShowLoadingDialog = false;
-        }
-        MvpLog.i("关闭dialog " + dialogFragment);
-        dialogFragment.dismissAllowingStateLoss();
-    }
-
     @Override
     public void showDialog(BaseDialogFragment dialogFragment) {
         if (dialogFragment == null) {
@@ -121,9 +101,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
         }
         dialogFragment.setOnDialogCancelListener(mOnDialogCancelListener);
         if (!mDialogFragments.contains(dialogFragment)) {
-            mDialogFragments.add(dialogFragment);
-            MvpLog.i("显示dialog " + dialogFragment);
-            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getTag());
+            show(dialogFragment);
+        } else {
+            dismissDialog(dialogFragment);
+            show(dialogFragment);
         }
     }
 
@@ -131,7 +112,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     public void dismissDialog(BaseDialogFragment dialogFragment) {
         if (mDialogFragments.contains(dialogFragment)) {
             dismiss(dialogFragment);
-            mDialogFragments.remove(dialogFragment);
         }
     }
 
@@ -141,6 +121,18 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
             dismiss(dialogFragment);
         }
         mDialogFragments.clear();
+    }
+
+    private void show(BaseDialogFragment dialogFragment) {
+        mDialogFragments.add(dialogFragment);
+        dialogFragment.show(getSupportFragmentManager(), dialogFragment.getTag());
+        MvpLog.i("显示dialog " + dialogFragment);
+    }
+
+    private void dismiss(BaseDialogFragment dialogFragment) {
+        mDialogFragments.remove(dialogFragment);
+        dialogFragment.dismissAllowingStateLoss();
+        MvpLog.i("关闭dialog " + dialogFragment);
     }
 
     @Override

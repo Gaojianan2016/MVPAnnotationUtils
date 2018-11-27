@@ -61,11 +61,11 @@ public class ReflexUtils {
         return null;
     }
 
-    public static Object doDeclaredMethod(Object o, String name){
+    public static Object doDeclaredMethod(Object o, String name) {
         return doDeclaredMethod(o, name, null, null);
     }
 
-    public static Object doDeclaredMethod(Object o, String name, Class<?>[] parameterTypes, Object[] args){
+    public static Object doDeclaredMethod(Object o, String name, Class<?>[] parameterTypes, Object[] args) {
         if (o == null) {
             Log.e(TAG, "Object is null.");
             return null;
@@ -86,19 +86,42 @@ public class ReflexUtils {
         return null;
     }
 
-    public static void setDeclaredField(Object o, String name, Object value){
+    public static void setDeclaredField(Object o, String name, Object value) {
         if (o == null) {
             Log.e(TAG, "Object is null.");
             return;
         }
         try {
             Field field = o.getClass().getDeclaredField(name);
+            setField(o, field, value);
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, "找不到参数", e);
+        }
+    }
+
+    public static void setField(Object o, String name, Object value) {
+        if (o == null) {
+            Log.e(TAG, "Object is null.");
+            return;
+        }
+        try {
+            Field field = o.getClass().getField(name);
+            setField(o, field, value);
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, "找不到参数", e);
+        }
+    }
+
+    public static void setField(Object o, Field field, Object value) {
+        if (o == null) {
+            Log.e(TAG, "Object is null.");
+            return;
+        }
+        try {
             if (!"public".equals(Modifier.toString(field.getModifiers()))) {
                 field.setAccessible(true);
             }
             field.set(o, value);
-        } catch (NoSuchFieldException e) {
-            Log.e(TAG, "找不到参数", e);
         } catch (IllegalAccessException e) {
             Log.e(TAG, "非法访问", e);
         }

@@ -14,8 +14,7 @@ import com.gjn.mvpannotationlibrary.utils.MvpLog;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 import com.gjn.mvpannotationlibrary.utils.ViewUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author gjn
@@ -28,10 +27,8 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     protected Activity mActivity;
     protected Bundle mBundle;
     protected View mView;
-    protected boolean mIsShowLoadingDialog;
-    private List<BaseDialogFragment> mDialogFragments;
+    private CopyOnWriteArrayList<BaseDialogFragment> mDialogFragments;
     private BaseDialogFragment.OnDialogCancelListener mOnDialogCancelListener;
-    private BaseDialogFragment mLoadingDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +44,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(getLayoutId(), null);
+            mView = inflater.inflate(getLayoutId(), container, false);
             init();
             initDialogFragment();
             initView();
@@ -64,7 +61,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     }
 
     private void initDialogFragment() {
-        mDialogFragments = new ArrayList<>();
+        mDialogFragments = new CopyOnWriteArrayList<>();
         mOnDialogCancelListener = new BaseDialogFragment.OnDialogCancelListener() {
             @Override
             public void cancel(BaseDialogFragment dialogFragment) {
@@ -108,22 +105,6 @@ public abstract class BaseFragment extends Fragment implements IEvent {
         ToastUtils.showToast(mActivity, msg);
     }
 
-    protected void showLoadingDialog(BaseDialogFragment loadingDialog) {
-        if (!mIsShowLoadingDialog) {
-            mIsShowLoadingDialog = true;
-            mLoadingDialog = loadingDialog;
-            showDialog(mLoadingDialog);
-        }
-    }
-
-    protected void dismiss(BaseDialogFragment dialogFragment) {
-        if (dialogFragment == mLoadingDialog) {
-            mIsShowLoadingDialog = false;
-        }
-        MvpLog.i("关闭dialog " + dialogFragment);
-        dialogFragment.dismissAllowingStateLoss();
-    }
-
     @Override
     public void showDialog(BaseDialogFragment dialogFragment) {
         if (dialogFragment == null) {
@@ -132,9 +113,10 @@ public abstract class BaseFragment extends Fragment implements IEvent {
         }
         dialogFragment.setOnDialogCancelListener(mOnDialogCancelListener);
         if (!mDialogFragments.contains(dialogFragment)) {
-            mDialogFragments.add(dialogFragment);
-            MvpLog.i("显示dialog " + dialogFragment);
-            dialogFragment.show(getChildFragmentManager(), dialogFragment.getTag());
+            show(dialogFragment);
+        } else {
+            dismissDialog(dialogFragment);
+            show(dialogFragment);
         }
     }
 
@@ -142,7 +124,6 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     public void dismissDialog(BaseDialogFragment dialogFragment) {
         if (mDialogFragments.contains(dialogFragment)) {
             dismiss(dialogFragment);
-            mDialogFragments.remove(dialogFragment);
         }
     }
 
@@ -152,6 +133,18 @@ public abstract class BaseFragment extends Fragment implements IEvent {
             dismiss(dialogFragment);
         }
         mDialogFragments.clear();
+    }
+
+    private void show(BaseDialogFragment dialogFragment) {
+        mDialogFragments.add(dialogFragment);
+        dialogFragment.show(getChildFragmentManager(), dialogFragment.getTag());
+        MvpLog.i("显示dialog " + dialogFragment);
+    }
+
+    protected void dismiss(BaseDialogFragment dialogFragment) {
+        mDialogFragments.remove(dialogFragment);
+        dialogFragment.dismissAllowingStateLoss();
+        MvpLog.i("关闭dialog " + dialogFragment);
     }
 
     @Override

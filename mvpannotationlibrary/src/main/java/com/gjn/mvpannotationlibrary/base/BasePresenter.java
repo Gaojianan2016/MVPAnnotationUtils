@@ -22,20 +22,20 @@ public class BasePresenter<V extends IMvpView, M extends IMvpModel<V>> implement
     public void onAttached(Activity activity, V view) {
         this.activity = activity;
         v = view;
-        createM();
+        m = createM();
         if (m != null) {
             m.onBind(activity, v);
         }
     }
 
-    private void createM() {
+    private M createM() {
+        M m = null;
         ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
         if (type != null) {
             Type[] types = type.getActualTypeArguments();
-            if (m == null) {
-                m = ReflexUtils.createObj((Class<M>) types[1]);
-            }
+            m = ReflexUtils.createObj((Class<M>) types[1]);
         }
+        return m;
     }
 
     @Override
