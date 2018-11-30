@@ -89,12 +89,19 @@ public abstract class BaseDialogFragment extends DialogFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
     public void onStart() {
         try {
             super.onStart();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         getDialog().setCanceledOnTouchOutside(isCloseOnTouchOutside);
         Window window = getDialog().getWindow();
         if (window != null) {
@@ -118,6 +125,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (getLayoutId() != 0) {
             ViewHolder holder = ViewHolder.create(getActivity(), getLayoutId(), container);
             convertView(holder, this);
