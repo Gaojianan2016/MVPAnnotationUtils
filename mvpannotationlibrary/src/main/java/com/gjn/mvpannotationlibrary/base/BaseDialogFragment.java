@@ -18,6 +18,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author gjn
  * @time 2018/9/29 10:19
@@ -39,9 +42,24 @@ public abstract class BaseDialogFragment extends DialogFragment {
     private int height = WRAP_CONTENT;
     private int gravity = Gravity.CENTER;
     private OnDialogCancelListener onDialogCancelListener;
+    private List<OnDialogCancelListener> onDialogCancelListeners;
 
     public BaseDialogFragment setOnDialogCancelListener(OnDialogCancelListener onDialogCancelListener) {
         this.onDialogCancelListener = onDialogCancelListener;
+        return this;
+    }
+
+    public void clearOnDialogCancelListenerAll() {
+        onDialogCancelListeners.clear();
+    }
+
+    public BaseDialogFragment addOnDialogCancelListener(OnDialogCancelListener onDialogCancelListener) {
+        if (onDialogCancelListeners == null) {
+            onDialogCancelListeners = new ArrayList<>();
+        }
+        if (!onDialogCancelListeners.contains(onDialogCancelListener) && onDialogCancelListener != null) {
+            onDialogCancelListeners.add(onDialogCancelListener);
+        }
         return this;
     }
 
@@ -164,6 +182,11 @@ public abstract class BaseDialogFragment extends DialogFragment {
         super.onCancel(dialog);
         if (onDialogCancelListener != null) {
             onDialogCancelListener.cancel(this);
+        }
+        if (onDialogCancelListeners != null) {
+            for (OnDialogCancelListener listener : onDialogCancelListeners) {
+                listener.cancel(this);
+            }
         }
     }
 

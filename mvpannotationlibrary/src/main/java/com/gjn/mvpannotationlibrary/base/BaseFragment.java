@@ -149,6 +149,9 @@ public abstract class BaseFragment extends Fragment implements IEvent {
 
     @Override
     public void onDestroyView() {
+        for (BaseDialogFragment dialogFragment : mDialogFragments) {
+            dialogFragment.clearOnDialogCancelListenerAll();
+        }
         mDialogFragments.clear();
         super.onDestroyView();
     }

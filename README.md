@@ -12,7 +12,7 @@ allprojects {
 
 
 dependencies {
-    implementation 'com.github.Gaojianan2016:MVPAnnotationUtils:1.1.2'
+    implementation 'com.github.Gaojianan2016:MVPAnnotationUtils:1.1.3'
 }
 ```
 
