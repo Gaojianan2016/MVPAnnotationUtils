@@ -50,7 +50,9 @@ public abstract class BaseDialogFragment extends DialogFragment {
     }
 
     public void clearOnDialogCancelListenerAll() {
-        onDialogCancelListeners.clear();
+        if (onDialogCancelListeners != null) {
+            onDialogCancelListeners.clear();
+        }
     }
 
     public BaseDialogFragment addOnDialogCancelListener(OnDialogCancelListener onDialogCancelListener) {
