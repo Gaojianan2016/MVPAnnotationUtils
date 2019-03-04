@@ -1,19 +1,20 @@
 package com.gjn.mvpannotationutils;
 
 import android.app.Activity;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.gjn.mvpannotationlibrary.base.BaseDialogFragment;
 import com.gjn.mvpannotationlibrary.base.BaseMvpActivity;
-import com.gjn.mvpannotationlibrary.base.MvpDialogFragment;
-import com.gjn.mvpannotationlibrary.base.ViewHolder;
 import com.gjn.mvpannotationlibrary.utils.AppManager;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
 import com.gjn.mvpannotationlibrary.utils.BindPresenters;
 import com.gjn.mvpannotationlibrary.utils.MvpLog;
+import com.shoumi.easydialogfragmentlibrary.NormalDFragment;
+import com.shoumi.easydialogfragmentlibrary.base.BaseDFragment;
+import com.shoumi.easydialogfragmentlibrary.base.IDFragmentConvertView;
 
 @BindPresenters({MainPresenter.class, MainPresenter2.class})
 public class MainActivity extends BaseMvpActivity implements IMainView, IMainView2 {
@@ -23,8 +24,8 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
     @BindPresenter
     MainPresenter2 presenter2;
 
-    BaseDialogFragment dialogFragment1;
-    BaseDialogFragment dialogFragment2;
+    BaseDFragment dialogFragment1;
+    BaseDFragment dialogFragment2;
 
     @Override
     protected int getLayoutId() {
@@ -35,10 +36,10 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
     protected void initView() {
         ((TextView) findViewById(R.id.tv_main)).setText("第一个页面");
 
-        dialogFragment1 = MvpDialogFragment.newInstance(createBuilder(mActivity));
-        dialogFragment2 = MvpDialogFragment.newInstance(R.layout.dialog_test, new MvpDialogFragment.DialogCreateListener() {
+        dialogFragment1 = NormalDFragment.newInstance(R.layout.dialog_test);
+        dialogFragment2 = NormalDFragment.newInstance(R.layout.dialog_test, new IDFragmentConvertView() {
             @Override
-            public void convertView(ViewHolder holder, BaseDialogFragment dialogFragment) {
+            public void convertView(com.shoumi.easydialogfragmentlibrary.base.ViewHolder holder, DialogFragment dialogFragment) {
                 TextView textView = holder.findView(R.id.tv_dialog);
                 textView.setText("我是第二个dialog");
                 textView.setOnClickListener(new View.OnClickListener() {
@@ -49,7 +50,8 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
                 });
             }
         });
-        dialogFragment2.setDimAmout(0).setWidth(BaseDialogFragment.MATCH_PARENT);
+        dialogFragment2.setDimAmout(0);
+        dialogFragment2.setWidth(BaseDFragment.MATCH_PARENT);
     }
 
     private AlertDialog.Builder createBuilder(Activity activity) {

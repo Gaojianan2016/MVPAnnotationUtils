@@ -10,11 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gjn.mvpannotationlibrary.utils.MvpLog;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 import com.gjn.mvpannotationlibrary.utils.ViewUtils;
-
-import java.util.concurrent.CopyOnWriteArrayList;
+import com.shoumi.easydialogfragmentlibrary.DFragmentManager;
+import com.shoumi.easydialogfragmentlibrary.base.BaseDFragment;
 
 /**
  * @author gjn
@@ -27,8 +26,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     protected Activity mActivity;
     protected Bundle mBundle;
     protected View mView;
-    private CopyOnWriteArrayList<BaseDialogFragment> mDialogFragments;
-    private BaseDialogFragment.OnDialogCancelListener mOnDialogCancelListener;
+    private DFragmentManager manager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,9 +42,9 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
+            manager = new DFragmentManager(this);
             mView = inflater.inflate(getLayoutId(), container, false);
             init();
-            initDialogFragment();
             initView();
             initData();
         }
@@ -60,16 +58,6 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     protected void init() {
     }
 
-    private void initDialogFragment() {
-        mDialogFragments = new CopyOnWriteArrayList<>();
-        mOnDialogCancelListener = new BaseDialogFragment.OnDialogCancelListener() {
-            @Override
-            public void cancel(BaseDialogFragment dialogFragment) {
-                MvpLog.i("手动关闭dialog " + dialogFragment);
-                mDialogFragments.remove(dialogFragment);
-            }
-        };
-    }
 
     public final <T extends View> T findViewById(int id) {
         return mView.findViewById(id);
@@ -106,53 +94,23 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     }
 
     @Override
-    public void showDialog(BaseDialogFragment dialogFragment) {
-        if (dialogFragment == null) {
-            MvpLog.w("mDialogFragment is null.");
-            return;
-        }
-        dialogFragment.setOnDialogCancelListener(mOnDialogCancelListener);
-        if (!mDialogFragments.contains(dialogFragment)) {
-            show(dialogFragment);
-        } else {
-            dismissDialog(dialogFragment);
-            show(dialogFragment);
-        }
+    public void showDialog(BaseDFragment dialogFragment) {
+        manager.showDialog(dialogFragment);
     }
 
     @Override
-    public void dismissDialog(BaseDialogFragment dialogFragment) {
-        if (mDialogFragments.contains(dialogFragment)) {
-            dismiss(dialogFragment);
-        }
+    public void dismissDialog(BaseDFragment dialogFragment) {
+        manager.dismissDialog(dialogFragment);
     }
 
     @Override
     public void dismissDialogAll() {
-        for (BaseDialogFragment dialogFragment : mDialogFragments) {
-            dismiss(dialogFragment);
-        }
-        mDialogFragments.clear();
-    }
-
-    private void show(BaseDialogFragment dialogFragment) {
-        mDialogFragments.add(dialogFragment);
-        dialogFragment.show(getChildFragmentManager(), dialogFragment.getTag());
-        MvpLog.i("显示dialog " + dialogFragment);
-    }
-
-    protected void dismiss(BaseDialogFragment dialogFragment) {
-        mDialogFragments.remove(dialogFragment);
-        dialogFragment.dismissAllowingStateLoss();
-        MvpLog.i("关闭dialog " + dialogFragment);
+        manager.clearDialog();
     }
 
     @Override
     public void onDestroyView() {
-        for (BaseDialogFragment dialogFragment : mDialogFragments) {
-            dialogFragment.clearOnDialogCancelListenerAll();
-        }
-        mDialogFragments.clear();
+        dismissDialogAll();
         super.onDestroyView();
     }
 

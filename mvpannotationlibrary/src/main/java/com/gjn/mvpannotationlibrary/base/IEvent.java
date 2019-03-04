@@ -1,7 +1,8 @@
 package com.gjn.mvpannotationlibrary.base;
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+
+import com.shoumi.easydialogfragmentlibrary.base.BaseDFragment;
 
 /**
  * @author gjn
@@ -19,9 +20,9 @@ public interface IEvent {
 
     void showToast(String msg);
 
-    void showDialog(BaseDialogFragment dialogFragment);
+    void showDialog(BaseDFragment dialogFragment);
 
-    void dismissDialog(BaseDialogFragment dialogFragment);
+    void dismissDialog(BaseDFragment dialogFragment);
 
     void dismissDialogAll();
 }
