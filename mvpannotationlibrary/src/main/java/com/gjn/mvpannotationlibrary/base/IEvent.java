@@ -2,7 +2,8 @@ package com.gjn.mvpannotationlibrary.base;
 
 import android.os.Bundle;
 
-import com.shoumi.easydialogfragmentlibrary.base.BaseDFragment;
+import com.gjn.easydialoglibrary.base.BaseDFragment;
+
 
 /**
  * @author gjn

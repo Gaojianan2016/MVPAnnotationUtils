@@ -7,14 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.gjn.easydialoglibrary.NormalDFragment;
+import com.gjn.easydialoglibrary.base.BaseDFragment;
+import com.gjn.easydialoglibrary.base.IDFragmentConvertView;
+import com.gjn.easydialoglibrary.base.ViewHolder;
 import com.gjn.mvpannotationlibrary.base.BaseMvpActivity;
 import com.gjn.mvpannotationlibrary.utils.AppManager;
 import com.gjn.mvpannotationlibrary.utils.BindPresenter;
 import com.gjn.mvpannotationlibrary.utils.BindPresenters;
 import com.gjn.mvpannotationlibrary.utils.MvpLog;
-import com.shoumi.easydialogfragmentlibrary.NormalDFragment;
-import com.shoumi.easydialogfragmentlibrary.base.BaseDFragment;
-import com.shoumi.easydialogfragmentlibrary.base.IDFragmentConvertView;
 
 @BindPresenters({MainPresenter.class, MainPresenter2.class})
 public class MainActivity extends BaseMvpActivity implements IMainView, IMainView2 {
@@ -39,7 +40,7 @@ public class MainActivity extends BaseMvpActivity implements IMainView, IMainVie
         dialogFragment1 = NormalDFragment.newInstance(R.layout.dialog_test);
         dialogFragment2 = NormalDFragment.newInstance(R.layout.dialog_test, new IDFragmentConvertView() {
             @Override
-            public void convertView(com.shoumi.easydialogfragmentlibrary.base.ViewHolder holder, DialogFragment dialogFragment) {
+            public void convertView(ViewHolder holder, DialogFragment dialogFragment) {
                 TextView textView = holder.findView(R.id.tv_dialog);
                 textView.setText("我是第二个dialog");
                 textView.setOnClickListener(new View.OnClickListener() {

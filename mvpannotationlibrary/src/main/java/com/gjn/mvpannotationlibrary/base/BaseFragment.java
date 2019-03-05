@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gjn.easydialoglibrary.EasyDFragmentManager;
+import com.gjn.easydialoglibrary.base.BaseDFragment;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 import com.gjn.mvpannotationlibrary.utils.ViewUtils;
-import com.shoumi.easydialogfragmentlibrary.EasyDFragmentManager;
-import com.shoumi.easydialogfragmentlibrary.base.BaseDFragment;
 
 /**
  * @author gjn

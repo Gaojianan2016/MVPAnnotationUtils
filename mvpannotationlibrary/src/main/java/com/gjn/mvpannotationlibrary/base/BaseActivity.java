@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.gjn.easydialoglibrary.EasyDFragmentManager;
+import com.gjn.easydialoglibrary.base.BaseDFragment;
 import com.gjn.mvpannotationlibrary.utils.AppManager;
 import com.gjn.mvpannotationlibrary.utils.MvpLog;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
-import com.shoumi.easydialogfragmentlibrary.EasyDFragmentManager;
-import com.shoumi.easydialogfragmentlibrary.base.BaseDFragment;
 
 /**
  * @author gjn
