@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
 import com.gjn.mvpannotationlibrary.utils.ViewUtils;
-import com.shoumi.easydialogfragmentlibrary.DFragmentManager;
+import com.shoumi.easydialogfragmentlibrary.EasyDFragmentManager;
 import com.shoumi.easydialogfragmentlibrary.base.BaseDFragment;
 
 /**
@@ -26,7 +26,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     protected Activity mActivity;
     protected Bundle mBundle;
     protected View mView;
-    private DFragmentManager manager;
+    protected EasyDFragmentManager manager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
-            manager = new DFragmentManager(this);
+            manager = new EasyDFragmentManager(this);
             mView = inflater.inflate(getLayoutId(), container, false);
             init();
             initView();
@@ -101,6 +101,11 @@ public abstract class BaseFragment extends Fragment implements IEvent {
     @Override
     public void dismissDialog(BaseDFragment dialogFragment) {
         manager.dismissDialog(dialogFragment);
+    }
+
+    @Override
+    public void showOnlyDialog(BaseDFragment dialogFragment) {
+        manager.showOnlyDialog(dialogFragment);
     }
 
     @Override

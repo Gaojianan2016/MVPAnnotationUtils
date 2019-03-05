@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.gjn.mvpannotationlibrary.utils.AppManager;
 import com.gjn.mvpannotationlibrary.utils.MvpLog;
 import com.gjn.mvpannotationlibrary.utils.ToastUtils;
-import com.shoumi.easydialogfragmentlibrary.DFragmentManager;
+import com.shoumi.easydialogfragmentlibrary.EasyDFragmentManager;
 import com.shoumi.easydialogfragmentlibrary.base.BaseDFragment;
 
 /**
@@ -23,7 +23,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     protected Context mContext;
     protected Activity mActivity;
     protected Bundle mBundle;
-    private DFragmentManager manager;
+    protected EasyDFragmentManager manager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
         mContext = this;
         mActivity = this;
         mBundle = getIntent().getExtras() == null ? new Bundle() : getIntent().getExtras();
-        manager = new DFragmentManager(this);
+        manager = new EasyDFragmentManager(this);
 
         init();
         initView();
@@ -84,6 +84,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     @Override
     public void showDialog(BaseDFragment dialogFragment) {
         manager.showDialog(dialogFragment);
+    }
+
+    @Override
+    public void showOnlyDialog(BaseDFragment dialogFragment) {
+        manager.showOnlyDialog(dialogFragment);
     }
 
     @Override

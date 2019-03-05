@@ -22,6 +22,8 @@ public interface IEvent {
 
     void showDialog(BaseDFragment dialogFragment);
 
+    void showOnlyDialog(BaseDFragment dialogFragment);
+
     void dismissDialog(BaseDFragment dialogFragment);
 
     void dismissDialogAll();

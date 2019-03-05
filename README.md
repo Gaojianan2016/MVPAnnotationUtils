@@ -12,8 +12,8 @@ allprojects {
 
 
 dependencies {
-    implementation 'com.github.Gaojianan2016:MVPAnnotationUtils:1.1.5'
-    implementation 'com.github.Gaojianan2016:EasyDialogFragment:1.0.0'
+    implementation 'com.github.Gaojianan2016:MVPAnnotationUtils:1.1.6'
+    implementation 'com.github.Gaojianan2016:EasyDialogFragment:1.0.1'
 }
 ```
 
