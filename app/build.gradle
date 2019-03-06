@@ -27,5 +27,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':mvpannotationlibrary')
 
-    implementation 'com.github.Gaojianan2016:EasyDialogFragment:1.0.5'
+    implementation 'com.github.Gaojianan2016:EasyDialogFragment:1.1.1'
 }
