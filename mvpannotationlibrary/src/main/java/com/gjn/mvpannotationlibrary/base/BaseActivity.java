@@ -104,6 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IEvent {
     @Override
     protected void onDestroy() {
         MvpLog.d("onDestroy " + getClass().getSimpleName());
+        AppManager.getInstance().removeActivity(this);
         dismissDialogAll();
         super.onDestroy();
     }
